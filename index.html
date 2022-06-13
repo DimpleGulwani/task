@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Image with zoom in zoom out
+	</title>
+
+	<!-- Loading the FabricJS library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+</head>
+
+<body>
+    <input id="uploader" type="file"/>
+    <canvas id="canvas" width="400" height="300" style="border:1px solid black"></canvas>
+  
+
+	<!-- Add the image to be used in the canvas
+		and hide it here because only need it
+		inside the canvas -->
+	<img style="display: none;" src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20200327230544/g4gicon.png"
+				id="my-image" alt="">
+				
+	<script>
+	
+          /** allgemeine var definition **/
+          	// // Initiate a Canvas instance
+          var canvas = new fabric.Canvas('canvas');
+
+document.getElementById("uploader").onchange = function(e) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var image = new Image();
+    image.src = e.target.result;
+    image.onload = function() {
+        // // Initiate a Fabric instance
+      var img = new fabric.Image(image);
+      img.set({
+        left: 100,
+        top: 60
+      });
+      img.scaleToWidth(200);
+      	// // Add the image to canvas
+      canvas.add(img).setActiveObject(img).renderAll();
+    }
+  }
+  reader.readAsDataURL(e.target.files[0]);
+
+  canvas.on('mouse:wheel', function(opt) {
+  var delta = opt.e.deltaY;
+  var zoom = canvas.getZoom();
+  zoom *= 0.999 ** delta;
+  if (zoom > 20) zoom = 20;
+  if (zoom < 1) zoom = 1;
+  const center = canvas.getCenter();
+  const centerPoint = new fabric.Point(center.left , center.right);
+  canvas.setZoom(zoom);
+  opt.e.preventDefault();
+  opt.e.stopPropagation();
+})
+
+}
+
+
+
+
+	</script>
+</body>
+
+</html>
